@@ -1,8 +1,9 @@
-from mage_ai.data_preparation.repo_manager import get_repo_path
+from mage_ai.settings.repo import get_repo_path
 from mage_ai.io.bigquery import BigQuery
 from mage_ai.io.config import ConfigFileLoader
 from pandas import DataFrame
 from os import path
+ 
 
 if 'data_exporter' not in globals():
     from mage_ai.data_preparation.decorators import data_exporter
@@ -22,7 +23,7 @@ def export_data_to_big_query(data, **kwargs) -> None:
     config_profile = 'default'
 
     for key, value in data.items():
-        table_id = 'data-with-darshil.uber_data_engineering_yt.{}'.format(key)
+        table_id = 'my-test-project-452502.uber_de_project.{}'.format(key)
         BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).export(
             DataFrame(value),
             table_id,
