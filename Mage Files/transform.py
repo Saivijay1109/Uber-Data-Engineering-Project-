@@ -23,6 +23,7 @@ def transform(df, *args, **kwargs):
     # Specify your transformation logic here
     df['tpep_pickup_datetime'] = pd.to_datetime(df['tpep_pickup_datetime'])
     df['tpep_dropoff_datetime'] = pd.to_datetime(df['tpep_dropoff_datetime'])
+    df['trip_id'] = df.index
 
     datetime_dim = df[['tpep_pickup_datetime','tpep_dropoff_datetime']].drop_duplicates().reset_index(drop=True)
     datetime_dim['pick_hour'] = datetime_dim['tpep_pickup_datetime'].dt.hour
@@ -92,19 +93,19 @@ def transform(df, *args, **kwargs):
              .merge(dropoff_location_dim, on=['dropoff_longitude', 'dropoff_latitude'])\
              .merge(datetime_dim, on=['tpep_pickup_datetime','tpep_dropoff_datetime']) \
              .merge(payment_type_dim, on='payment_type') \
-             [['VendorID', 'datetime_id', 'passenger_count_id',
+             [['trip_id','VendorID', 'datetime_id', 'passenger_count_id',
                'trip_distance_id', 'rate_code_id', 'store_and_fwd_flag', 'pickup_location_id', 'dropoff_location_id',
                'payment_type_id', 'fare_amount', 'extra', 'mta_tax', 'tip_amount', 'tolls_amount',
                'improvement_surcharge', 'total_amount']]
 
-    return {"datetime_dim":datetime_dim.to_dict(orient="dict"),
-    "passenger_count_dim":passenger_count_dim.to_dict(orient="dict"),
-    "trip_distance_dim":trip_distance_dim.to_dict(orient="dict"),
-    "rate_code_dim":rate_code_dim.to_dict(orient="dict"),
-    "pickup_location_dim":pickup_location_dim.to_dict(orient="dict"),
-    "dropoff_location_dim":dropoff_location_dim.to_dict(orient="dict"),
-    "payment_type_dim":payment_type_dim.to_dict(orient="dict"),
-    "fact_table":fact_table.to_dict(orient="dict")}
+    return {"datetime_dim":datetime_dim,
+    "passenger_count_dim":passenger_count_dim,
+    "trip_distance_dim":trip_distance_dim,
+    "rate_code_dim":rate_code_dim,
+    "pickup_location_dim":pickup_location_dim,
+    "dropoff_location_dim":dropoff_location_dim,
+    "payment_type_dim":payment_type_dim,
+    "fact_table":fact_table}
 
 
 @test
@@ -113,3 +114,4 @@ def test_output(output, *args) -> None:
     Template code for testing the output of the block.
     """
     assert output is not None, 'The output is undefined'
+
