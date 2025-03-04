@@ -11,6 +11,7 @@ The goal of this project is to perform data analytics on Uber data using various
 
 ## Technology Used
 - Programming Language - Python
+- SQL
 
 ## Google Cloud Platform
 - Google Storage
